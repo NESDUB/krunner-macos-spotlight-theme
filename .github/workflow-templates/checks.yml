@@ -1,0 +1,18 @@
+name: Source hygiene and manager tests
+on:
+  push:
+  pull_request:
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests (not GUI validation)
+        run: python3 -m unittest discover -s tests -v
+      - name: Source and license checks
+        run: python3 tools/check_source.py
+      - name: Python syntax
+        run: python3 -m compileall -q tools tests
